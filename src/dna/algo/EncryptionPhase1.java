@@ -18,8 +18,42 @@ public class EncryptionPhase1 {
    
      public String DNA(String str)
      {        
-     //generating key value    
-     String[] dna={"A","T","G","C"};
+     //generating key value 
+     String[] dna = null;
+     keyforphase1 kp=new keyforphase1();
+     String dna1=kp.key1;
+     System.out.println(dna1);
+     for(int p=0,k=0;p<dna1.length();k++)
+     {
+         if(dna1.charAt(p)=='0')
+         {
+          if(dna1.charAt(p+1)=='0')
+           { 
+             dna[k]="A";
+           }
+          if(dna1.charAt(p+1)=='1')
+           { 
+             dna[k]="T";
+           }
+         }
+         if(dna1.charAt(p)=='1')
+         {
+          if(dna1.charAt(p+1)=='0')
+           { 
+             dna[k]="G";
+           }
+          if(dna1.charAt(p+1)=='1')
+           { 
+             dna[k]="C";
+           }
+         }
+         p=p+2;
+     }
+     System.out.println("key1");
+     System.out.println(dna[0]);
+     System.out.println(dna[1]);
+     System.out.println(dna[2]);
+     System.out.println(dna[3]);
      List<String> list = Arrays.asList(dna);
      Collections.shuffle(list);
      System.out.println(dna[1]);

@@ -5,6 +5,14 @@
  */
 package dna.algo;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.net.Socket;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -61,6 +69,11 @@ public class NewJFrame extends javax.swing.JFrame {
         label2.setText("Encrypted Text:");
 
         jButton2.setText("Send");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -112,8 +125,24 @@ public class NewJFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             // TODO add your handling code here:
-            String s=jTextField1.getText();
-            System.out.println(" taken form textfield "+s);
+            String str=jTextField1.getText();
+            System.out.println(" taken form textfield "+str);
+            byte[] bytes = str.getBytes();     
+            for(int i=0;i<bytes.length;i++)
+             {
+                System.out.print(bytes[i]);
+             }  
+             StringBuilder binary = new StringBuilder();  
+             for (byte b : bytes)  
+             {  
+              int val = b;  
+              for (int i = 0; i < 8; i++)  
+              {  
+                binary.append((val & 128) == 0 ? 0 : 1);  
+                val <<= 1;  
+              }  
+            }
+            String s=binary.toString();
             EncpryptionPhase1withThread ep1= new EncpryptionPhase1withThread();
             String  ss1=new String(ep1.calculate(s));
             System.out.println(" taken from phase 1 "+ss1);
@@ -122,6 +151,8 @@ public class NewJFrame extends javax.swing.JFrame {
             System.out.println(" \ntaken form phas2 "+ss2);
             textArea1.setText(ss2);
             System.out.println(ss2);
+            
+          
         }
         catch (InterruptedException ex) 
         {
@@ -136,10 +167,61 @@ public class NewJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+            try
+            {    
+            String str=textArea1.getText();
+            
+            }
+            catch(Exception e)
+            {
+            }
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) 
+    { 
+        try
+        {
+            BigInteger p,g,A,K;
+            int t=1,a;
+            p=BigInteger.probablePrime(72, new Random());
+            g=BigInteger.probablePrime(72, new Random());
+            a=10000;
+            System.out.println("a="+a);
+            while(t!=0)
+            {
+                if(p.compareTo(g)==1)
+                {
+                    t=0;
+                }
+                else
+                {    
+                g=BigInteger.probablePrime(72, new Random());
+                }
+            }
+            A=(g.pow(a)).mod(p);
+            System.out.println(" A in client="+A);
+            Socket s=new Socket("127.0.0.1",1201);
+            DataInputStream din=new DataInputStream(s.getInputStream());
+            DataOutputStream dout=new DataOutputStream(s.getOutputStream());
+            BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+            System.out.println(" p="+p+" \n g="+ g);
+            dout.writeUTF(p.toString());
+            Thread.sleep(1000);
+            dout.writeUTF(g.toString());
+            dout.writeUTF(A.toString());
+            String  B=(String)din.readUTF(); 
+            System.out.println(" B from server="+B);
+            K=new BigInteger(B).pow(a).mod(p);
+            System.out.println(" Client side K="+K);
+            keyforphase1 kp=new keyforphase1();
+            kp.keyforphase(K.toString());
+        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -164,11 +246,14 @@ public class NewJFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        java.awt.EventQueue.invokeLater(new Runnable() 
+        {
             public void run() {
                 new NewJFrame().setVisible(true);
             }
         });
+     }
+        catch(Exception e){}
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
