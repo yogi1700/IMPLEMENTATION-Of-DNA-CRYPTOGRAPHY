@@ -6,13 +6,18 @@
 package dna.algo;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.net.Socket;
-import java.util.Random;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,8 +25,21 @@ import java.util.logging.Logger;
  *
  * @author yogi
  */
-public class NewJFrame extends javax.swing.JFrame {
+public class NewJFrame extends javax.swing.JFrame 
+{
 
+    static Socket s;
+    static DataInputStream din;
+    static DataOutputStream dout;
+    static String joint="";
+    static String joint1="";
+    static public byte new_key1[]=null;
+    static public byte new_key2[]=null;
+    
+    static SenderRSA sa=new SenderRSA();
+    static ReceiverRSA sa1=new ReceiverRSA();
+    
+    
     /**
      * Creates new form NewJFrame
      */
@@ -29,7 +47,6 @@ public class NewJFrame extends javax.swing.JFrame {
     {
         initComponents();
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -126,12 +143,12 @@ public class NewJFrame extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             String str=jTextField1.getText();
-            System.out.println(" taken form textfield "+str);
+            //System.out.println(" taken form textfield "+str);
             byte[] bytes = str.getBytes();     
-            for(int i=0;i<bytes.length;i++)
-             {
-                System.out.print(bytes[i]);
-             }  
+            //for(int i=0;i<bytes.length;i++)
+             //{
+               // System.out.print(bytes[i]);
+             //}  
              StringBuilder binary = new StringBuilder();  
              for (byte b : bytes)  
              {  
@@ -142,20 +159,58 @@ public class NewJFrame extends javax.swing.JFrame {
                 val <<= 1;  
               }  
             }
+             //reading from file
+
+           byte[] array = Files.readAllBytes(Paths.get("binary.txt"));
+           //saving to file
+           FileOutputStream fos = new FileOutputStream("binary.txt");
+           fos.write(array );
+           fos.close();
             String s=binary.toString();
+            long startTime = System.currentTimeMillis();
             EncpryptionPhase1withThread ep1= new EncpryptionPhase1withThread();
             String  ss1=new String(ep1.calculate(s));
-            System.out.println(" taken from phase 1 "+ss1);
+            //System.out.println(" taken from phase 1 "+ss1);
             EncryptionPhase2withThread ep2=new EncryptionPhase2withThread();
             String ss2= new String(ep2.calculate(ss1));
-            System.out.println(" \ntaken form phas2 "+ss2);
+            //System.out.println(" \ntaken form phas2"+ss2);
+            //PrintWriter out = new PrintWriter("filename.txt");
+            BufferedWriter writer = null;
+            // ... do something ...
+            long estimatedTime = System.currentTimeMillis() - startTime;
+            try
+            {
+                writer = new BufferedWriter( new FileWriter("filename.txt"));
+                writer.write(ss2);
+
+            }
+            catch ( IOException e)
+            {
+            }
+            finally
+            {
+            try
+             {
+              if (writer != null)
+                writer.close( );
+              }
+             catch (IOException e)
+              {
+               }
+             }
+            //out.println("yogendra");
             textArea1.setText(ss2);
-            System.out.println(ss2);
+            System.out.println("\ntime taken by encryption ="+estimatedTime);
+            
+            
+            
             
           
         }
         catch (InterruptedException ex) 
         {
+            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -171,9 +226,52 @@ public class NewJFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
             try
             {    
+                
             String str=textArea1.getText();
+            dout.writeUTF(str);// sending encrypted message to client
             
+            //string str1 is public key of sender
+            String str1=(String)din.readUTF(); 
+            
+            //taking key1 from file and storing in joint string
+            FileReader freader = new FileReader("key.txt");  
+            BufferedReader br1= new BufferedReader(freader);  
+            String s;  
+            while((s = br1.readLine()) != null) 
+            {  
+            //System.out.println(s);  
+            joint=joint+s;
             }
+            //System.out.println("before encryption joint="+joint);
+            sa.SenderRSA1();// calling for generating public and private ke for sender
+            
+            //taking key2 form file and storing in joint1 string
+            FileReader freader1= new FileReader("key2.txt");  
+            BufferedReader br2= new BufferedReader(freader1);  
+            String s1;  
+            while((s1= br2.readLine()) != null) 
+            {  
+            //System.out.println(s1);  
+            joint1=joint1+s1;
+            }
+            //System.out.println("joint="+joint1);
+            
+            
+            //encrypting both key using server public key
+            
+            //System.out.println("key from server="+str1);
+            new_key1=sa.encryptData(joint,str1);
+            new_key2=sa.encryptData(joint1,str1);
+            
+            //using base64 because to avoid BadPadding error and sending keys after encryption to server
+            Base64.Encoder enDecoder= Base64.getEncoder();
+            String stringResult= enDecoder.encodeToString(new_key1);
+            dout.writeUTF(stringResult);
+             
+            String stringResult1= enDecoder.encodeToString(new_key2);
+            dout.writeUTF(stringResult1);
+            
+           }
             catch(Exception e)
             {
             }
@@ -187,7 +285,7 @@ public class NewJFrame extends javax.swing.JFrame {
     { 
         try
         {
-            BigInteger p,g,A,K;
+            /*BigInteger p,g,A,K;
             int t=1,a;
             p=BigInteger.probablePrime(72, new Random());
             g=BigInteger.probablePrime(72, new Random());
@@ -205,12 +303,20 @@ public class NewJFrame extends javax.swing.JFrame {
                 }
             }
             A=(g.pow(a)).mod(p);
-            System.out.println(" A in client="+A);
-            Socket s=new Socket("127.0.0.1",1201);
-            DataInputStream din=new DataInputStream(s.getInputStream());
-            DataOutputStream dout=new DataOutputStream(s.getOutputStream());
+            System.out.println(" A in client="+A);*/
+            s=new Socket("127.0.0.1",1201);
+            din=new DataInputStream(s.getInputStream());
+            dout=new DataOutputStream(s.getOutputStream());
             BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-            System.out.println(" p="+p+" \n g="+ g);
+            
+            
+            
+            
+            
+            
+            
+            //dout.writeUTF("yes");
+            /*System.out.println(" p="+p+" \n g="+ g);
             dout.writeUTF(p.toString());
             Thread.sleep(1000);
             dout.writeUTF(g.toString());
@@ -219,8 +325,12 @@ public class NewJFrame extends javax.swing.JFrame {
             System.out.println(" B from server="+B);
             K=new BigInteger(B).pow(a).mod(p);
             System.out.println(" Client side K="+K);
-            keyforphase1 kp=new keyforphase1();
-            kp.keyforphase(K.toString());
+            String key=K.toString(2);
+            /*keyforphase1 kp=new keyforphase1();
+            dout.writeUTF(kp.key1);
+            String value=textArea1.getText();
+            dout.writeUTF(value);*/
+            
         
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -254,14 +364,14 @@ public class NewJFrame extends javax.swing.JFrame {
         });
      }
         catch(Exception e){}
+      
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JTextField jTextField1;
     private java.awt.Label label1;
     private java.awt.Label label2;
-    private java.awt.TextArea textArea1;
+    public static java.awt.TextArea textArea1;
     // End of variables declaration//GEN-END:variables
 }

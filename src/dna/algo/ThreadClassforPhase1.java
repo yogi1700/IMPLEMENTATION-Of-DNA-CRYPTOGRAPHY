@@ -27,13 +27,13 @@ public class ThreadClassforPhase1 extends Thread
     {
           
         
-        System.out.println(" In threda"+id);
+        //System.out.println(" In threda"+id);
         EncpryptionPhase1withThread nw=new EncpryptionPhase1withThread();
         for(int i=start_index,j=start_index/2;i<len;)
         {
          char ch1=(char)str.charAt(i);
          char ch2=(char)str.charAt(i+1);
-         System.out.println("\nch1= "+ch1+" ch2 ="+ch2);
+         //System.out.println("\nch1= "+ch1+" ch2 ="+ch2);
          String str2=String.valueOf(ch1)+String.valueOf(ch2);
          
          if(str2.equals("00"))

@@ -91,6 +91,9 @@
       </Events>
     </Component>
     <Component class="java.awt.TextArea" name="textArea1">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
+      </AuxValues>
     </Component>
     <Component class="java.awt.Label" name="label1">
       <Properties>

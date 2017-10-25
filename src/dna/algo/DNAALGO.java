@@ -4,73 +4,51 @@
  * and open the template in the editor.
  */
 package dna.algo;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 
 /**
  *
  * @author yogi
  */
-public class DNAALGO
+public class DNAALGO extends JFrame implements ActionListener
 {
-
+     static JButton b1,b2;
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args)
     {
         // TODO code application logic here
-     String str="";
-     String[] dna={"A","T","G","C"};
-     List<String> list = Arrays.asList(dna);
-     Collections.shuffle(list);
-     System.out.println(dna[1]);
-     
-     Scanner sc=new Scanner(System.in);
-     str=sc.next();
-     StringBuilder bdr= new StringBuilder();
-     bdr.append(str);
-     int i=0;
-     if(bdr.length()%2==1)
-         bdr.append("0");
-     while(i<bdr.length())
-     {
-         
-      char ch1=(char)bdr.charAt(i);
-      char ch2=(char)bdr.charAt(i+1);
-      System.out.println("ch1= "+ch1+" ch2 ="+ch2);
-      String str2=String.valueOf(ch1)+String.valueOf(ch2);
-      System.out.println("i "+i);
-      System.out.println("str2= "+str2);      
-      System.out.println("substring= "+bdr.substring(i, i+2)); 
-      if(str2.equals("00"))
-      bdr.replace(i,i+2,"A");
-      
-      else if(str2.equals("01"))
-      bdr.replace(i,i+2,"T");
-      
-      else if(str2.equals("10"))
-      bdr.replace(i,i+2,"G");
-      
-      else if(str2.equals("11"))
-      bdr.replace(i,i+2,"C");
-   
-    System.out.println(bdr.toString()); 
-   
-    i++;
+       JFrame f=new JFrame();//creating instance of JFrame        
+       b1=new JButton("Decrypt");
+       b2=new JButton("Encrypt");  
+       b1.setBounds(160,100,100,50);
+       b2.setBounds(30,100,100,50);
+       f.add(b1);
+       f.add(b2);
+       b1.addActionListener(new DNAALGO());
+       b2.addActionListener(new DNAALGO());
+       f.setSize(300,300);//400 width and 500 height  
+       f.setLayout(null);//using no layout managers  
+       f.setVisible(true);//making the frame visible  
      }
-     System.out.println(bdr.toString());
-     if(str.length()%2==1)
-     {
-      if(str.charAt(str.length()-1)=='0')
-      bdr.replace(bdr.length()-1,bdr.length(),"Z");
-      if(str.charAt(str.length()-1)=='1')
-      bdr.replace(bdr.length()-1,bdr.length(),"O");
-      }
-     System.out.println(bdr.toString());
-      
-     }
+    @Override
+    public void actionPerformed(ActionEvent e) 
+    {
+        if(e.getSource()==b1)
+        {    
+         DecryJFrame1.main(null);
+        }
+        if(e.getSource()==b2)
+        {    
+         NewJFrame.main(null);
+        }
+        
+        
+    }
+    }
     
-}
+

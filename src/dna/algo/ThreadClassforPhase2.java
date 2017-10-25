@@ -10,7 +10,7 @@ package dna.algo;
  *
  * @author yogi
  */
-public class ThreadClassforPhase2 extends Thread
+public class ThreadClassforPhase2 extends Thread // this class is for encrypted message for threads
 {
     String str,su="";
     int len,id,start_index;
@@ -28,7 +28,7 @@ public class ThreadClassforPhase2 extends Thread
     {
           
         
-        System.out.println(" In thread"+id);
+        //System.out.println(" In thread"+id);
         EncryptionPhase2withThread nw=new EncryptionPhase2withThread();
         for(int i=start_index,j=start_index*2;i<len;)
         {

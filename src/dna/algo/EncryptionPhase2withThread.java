@@ -14,13 +14,15 @@ import java.util.Collections;
  *
  * @author yogi
  */
-public class EncryptionPhase2withThread 
+public class EncryptionPhase2withThread  //this class for encryption phase 2
 {
     static String a="";
     static String[] string={"AA","AT","AG","AC","TA","TT","TG","TC","GA","GT","GG","GC","CA","CT","CG","CC"};
     static String[] encode=new String[16];
     static ArrayList<Integer> list = new ArrayList<Integer>();
     static char [] global;
+    
+    //decimal to binary conversion
     public String binary(int product)
      { 
          int n=product;
@@ -43,41 +45,49 @@ public class EncryptionPhase2withThread
              
        return x;
      }
+    
     public char[] calculate(String str)
     {
         a=str;
         global=new char[a.length()*2];
-        System.out.println(" in phase 2 a="+str);
+        //System.out.println(" in phase 2 a="+str);
         try
         {  
-        System.out.println(" printing global first time");
-         for(int l=0;l<global.length;l++)
-        {
-            System.out.print(global[l]);
-        }
-        System.out.print("\n");
+        //System.out.println(" printing global first time");
+         //for(int l=0;l<global.length;l++)
+        //{
+           // System.out.print(global[l]);
+        //}
+        //System.out.print("\n");
         
         for (int i=0; i<16; i++) 
         {
             list.add(new Integer(i));
         }
-        Collections.shuffle(list);
-        for (int i=0; i<16; i++) 
-        {
-            System.out.print(" "+list.get(i));
-        }
-        System.out.print("\n");
+        Collections.shuffle(list); // used for shuffling the list values
+        
+        //for (int i=0; i<16; i++) 
+        //{
+          //  System.out.print(" "+list.get(i));
+        //}
+        //System.out.print("\n");
+        
+        //creating instance of below class and calling its own function 
         EncryptionPhase2withThread nw=new EncryptionPhase2withThread();
         for(int i=0;i<16;i++)
         {
             encode[i]=(nw.binary(list.get(i)));
         }
         
-        for(int i=0;i<16;i++)
-        {
-            System.out.println(encode[i]);
+        // for storing key2 in  text file
+        keyforphase1 kp=new keyforphase1();
+        kp.keyforphase2(encode);
+        
+        //for(int i=0;i<16;i++)
+        //{
+          //  System.out.println(encode[i]);
       
-        }
+        //}
         int thread_size=8;
         String sum="",sumi="";
         for(int i=0;i<(int)Math.ceil(a.length()/8.0);i++)
@@ -101,9 +111,9 @@ public class EncryptionPhase2withThread
     }
         
         Thread.sleep(100);
-        System.out.println(a.length()+" length of a "+global.length+" global length");
-        System.out.println(" a="+a);
-        System.out.println(" global second time ");
+        //System.out.println(a.length()+" length of a "+global.length+" global length");
+        //System.out.println(" a="+a);
+        //System.out.println(" global second time ");
         if(a.length()%2!=0)
         {
             if(a.charAt(a.length()-1)=='z')
@@ -112,10 +122,10 @@ public class EncryptionPhase2withThread
             global[(global.length-2)]='1';
                
         }
-        for(int l=0;l<global.length;l++)
-        {
-            System.out.print(global[l]);
-        }
+        //for(int l=0;l<global.length;l++)
+        //{
+        //    System.out.print(global[l]);
+        //}
   }
     
     catch(Exception e){}

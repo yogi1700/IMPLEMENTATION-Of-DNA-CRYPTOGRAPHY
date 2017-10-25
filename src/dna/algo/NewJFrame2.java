@@ -4,15 +4,17 @@
  * and open the template in the editor.
  */
 package dna.algo;
-
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Base64;
 
 /**
  *
@@ -21,16 +23,17 @@ import java.net.Socket;
 public class NewJFrame2 extends javax.swing.JFrame 
 {
       
+    static String output = "";
+    static String str1="";
+    static String joint1="";
     
-    static String str="";
-
     /**
      * Creates new form NewJFrame2
      */
-    public NewJFrame2() {
+    public NewJFrame2() 
+    {
         initComponents();
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -67,6 +70,11 @@ public class NewJFrame2 extends javax.swing.JFrame
 
         jButton2.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         jButton2.setText("Decrypt");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         jLabel2.setText("Plain Text:");
@@ -114,8 +122,13 @@ public class NewJFrame2 extends javax.swing.JFrame
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        jTextArea1.setText(str);
+        jTextArea1.setText(str1);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        jTextField1.setText(output);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -126,16 +139,133 @@ public class NewJFrame2 extends javax.swing.JFrame
         
         try
         {
-            BigInteger p,g,B,K;
-            int b=20000;
-            System.out.println("b="+b);
+            //System.out.println("In server side");
+            
+            ReceiverRSA rsa2=new ReceiverRSA();
+            
+            // connect with client with same port number and accept request of client
             ServerSocket ss1=new ServerSocket(1201);
             Socket s=ss1.accept();
             DataInputStream din=new DataInputStream(s.getInputStream());
             DataOutputStream dout=new DataOutputStream(s.getOutputStream());
-            BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-            String  str1=(String)din.readUTF(); 
-            String  str2=(String)din.readUTF(); 
+            BufferedReader br=new BufferedReader(new InputStreamReader(System.in)); 
+            
+            //encrypted message from client
+            str1=(String)din.readUTF(); 
+            //System.out.println("message="+str1);
+            
+            //generating public and private key for server
+            rsa2.ReceiverRSA1();
+            
+            //reading public key and assigning in joint1 string
+            FileReader freader1= new FileReader("Public_receiver_read.key");  
+            BufferedReader br2= new BufferedReader(freader1);  
+            String kl;  
+            while((kl= br2.readLine()) != null) 
+            {  
+            //System.out.println(kl);  
+            joint1=joint1+kl;
+            }
+            //System.out.println("joint="+joint1);
+            
+            //sending public key to client
+            dout.writeUTF(joint1);
+            
+            // recieved key1 from client in encrypted form
+            String key3=(String)din.readUTF();  
+            //System.out.println("key3="+key3);
+            
+            //decrypting key1 with server private key
+            Base64.Decoder decoder=Base64.getDecoder();
+            byte[] encrypted =decoder.decode(key3);
+            //System.out.println(" in New Frame 2"+encrypted);
+            
+            byte[] decryptedkey1=rsa2.decryptData(encrypted);
+            //System.out.println(" server side="+new String(decryptedkey1));
+            String kkk=new String(decryptedkey1);
+            
+            //storing key1
+             BufferedWriter writer = null;
+            try
+            {
+                writer = new BufferedWriter( new FileWriter("Server/key1.txt"));
+                writer.write(kkk);
+
+            }
+            catch ( IOException e)
+            {
+            }
+            finally
+            {
+            try
+             {
+              if (writer != null)
+                writer.close( );
+              }
+             catch (IOException e)
+              {
+               }
+             }
+        
+            
+            
+            
+            String key4=(String)din.readUTF();//key2 received from client
+            
+            //decrypting key2 
+            byte[] encrypted1=decoder.decode(key4);
+            //System.out.println(" in New Frame 2"+encrypted1);
+            byte[] decryptedkey2=rsa2.decryptData(encrypted1);
+            //System.out.println(" decrypted key2==="+new String(decryptedkey2));
+            String kkk1=new String(decryptedkey2);
+            
+            //storing key2
+            BufferedWriter writer1=null;
+            try
+            {
+                writer1= new BufferedWriter( new FileWriter("Server/key2.txt"));
+                writer1.write(kkk1);
+
+            }
+            catch (IOException e)
+            {
+            }
+            finally
+            {
+            try
+             {
+              if (writer1 != null)
+                writer1.close( );
+              }
+             catch (IOException e)
+              {
+               }
+             }
+            
+            
+                    
+            //decrypting message of client        
+            DecryptionPhase1withThreads dp1=new DecryptionPhase1withThreads();
+            String s1=dp1.calculate(str1);
+            DecryptionPhase2 dp2=new DecryptionPhase2();
+            String ss2=dp2.calculate(s1);
+            //System.out.println("\nfinal phase2="+ss2);
+            
+            //BinarytoHexaDecimal bhd=new BinarytoHexaDecimal();
+            //String ss3=bhd.calcualte(ss2);
+            
+            //used for converting binary to text
+            for(int i = 0; i <= ss2.length() - 8; i+=8)
+            {
+                int k = Integer.parseInt(ss2.substring(i, i+8), 2);
+                output += (char) k;
+            }   
+            /*String [] decryPhase1=kp.calculate();
+            for(int k=0;k<decryPhase1.length;k++)
+            {
+                System.out.print(decryPhase1[k]);
+            } */  
+            /*String  str2=(String)din.readUTF(); 
             System.out.println("p="+str1);
             System.out.println("g="+str2); 
             p=new BigInteger(str1);
@@ -148,7 +278,12 @@ public class NewJFrame2 extends javax.swing.JFrame
             K=new BigInteger(A).pow(b).mod(p);
             System.out.println(" Server side K="+K);
             String key=K.toString(2);
-            System.out.println(" Server side K="+key);
+            System.out.println(" Server side K="+key);*//*
+            String key1=(String)din.readUTF();
+            System.out.println(" Server side K="+key1);
+            String value=(String)din.readUTF();
+            jTextArea1.setText(value);*/
+            
             
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -188,7 +323,7 @@ public class NewJFrame2 extends javax.swing.JFrame
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
+    public static javax.swing.JTextArea jTextArea1;
+    public javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

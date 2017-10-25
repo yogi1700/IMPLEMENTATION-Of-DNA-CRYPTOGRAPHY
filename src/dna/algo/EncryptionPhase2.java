@@ -54,27 +54,27 @@ public class EncryptionPhase2
             list.add(new Integer(i));
         }
         Collections.shuffle(list);
-        for (int i=0; i<16; i++) 
+        /*for (int i=0; i<16; i++) 
         {
             System.out.print(" "+list.get(i));
-        }
+        }*/
         String[] string={"AA","AT","AG","AC","TA","TT","TG","AC","CA","CT","CG","CC","GA","GT","GA","GC"};
         String[] encode=new String[16];
-        System.out.print("\n");
+        //System.out.print("\n");
         NewMain nw=new NewMain();
         for(int i=0;i<16;i++)
         {
             encode[i]=(nw.binary(list.get(i)));
         }
         
-        for(int i=0;i<16;i++)
+        /*for(int i=0;i<16;i++)
         {
             System.out.println(encode[i]);
       
-        }
+        }*/
         int i = 0, j = 0, l;
         StringBuilder bdr = new StringBuilder(str);
-        System.out.println(bdr);
+        //System.out.println(bdr);
         if (str.length() % 2 == 0)
         {
             l = str.length();
@@ -84,7 +84,7 @@ public class EncryptionPhase2
             l = str.length() - 1;
         }
         while (i < l) {
-            System.out.println(i + "th step\n");
+            //System.out.println(i + "th step\n");
             if (str.charAt(i) == 'A') {
                 if (str.charAt(i + 1) == 'A') {
                     bdr.replace(j, j + 2, encode[i]);
@@ -144,7 +144,7 @@ public class EncryptionPhase2
                     bdr.replace(j, j + 2, encode[i + 3]);
                 }
             }
-            System.out.println(bdr);
+            //System.out.println(bdr);
             i = i + 2;
             j = j + 4;
         }
