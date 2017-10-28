@@ -155,7 +155,7 @@ public class NewJFrame2 extends javax.swing.JFrame {
             rsa2.ReceiverRSA1();
 
             //reading public key and assigning in joint1 string
-            FileReader freader1 = new FileReader("Public_receiver_read.key");
+            FileReader freader1 = new FileReader("Server/Public_receiver_read.key");
             BufferedReader br2 = new BufferedReader(freader1);
             String kl;
             while ((kl = br2.readLine()) != null) {

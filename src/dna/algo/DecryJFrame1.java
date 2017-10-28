@@ -159,7 +159,7 @@ public class DecryJFrame1 extends javax.swing.JFrame {
         File f=chooser.getSelectedFile();
         String str=f.getName();
         jTextField1.setText(str);
-        BufferedReader in = new BufferedReader(new FileReader(str));
+        BufferedReader in = new BufferedReader(new FileReader("Client/"+str));
         String line;
         while((line = in.readLine()) != null)
           {

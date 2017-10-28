@@ -34,7 +34,7 @@ public class DecryptionPhase1withThreads
         //System.out.println("yes am in calculate of DecryptionPhase1 with Threads\n");
         
         //reading the key1 from file key.txt and assigning the key string
-        FileReader freader = new FileReader("key.txt");  
+        FileReader freader = new FileReader("Client/key.txt");  
         BufferedReader br = new BufferedReader(freader);  
         String s;  
         //System.out.println("");
@@ -48,7 +48,7 @@ public class DecryptionPhase1withThreads
         //System.out.println(" key for phase1="+key);
         
         //reading the key2 from file key2.txt and assigning  key2 string
-        FileReader freader2= new FileReader("key2.txt");  
+        FileReader freader2= new FileReader("Client/key2.txt");  
         BufferedReader br2= new BufferedReader(freader2);  
         String s1;  
         //System.out.println("");
@@ -70,7 +70,7 @@ public class DecryptionPhase1withThreads
         } */
         
         //storing message to filename.txt file
-        FileReader freader3 = new FileReader("filename.txt");  
+        FileReader freader3 = new FileReader("Client/filename.txt");  
         BufferedReader br3= new BufferedReader(freader3);  
         String s3;  
         //System.out.println();

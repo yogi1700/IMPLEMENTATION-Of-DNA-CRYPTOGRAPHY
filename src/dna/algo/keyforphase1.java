@@ -30,7 +30,7 @@ public class keyforphase1
        BufferedWriter writer = null;
             try
             {
-                writer = new BufferedWriter( new FileWriter("key.txt"));
+                writer = new BufferedWriter( new FileWriter("Client/key.txt"));
                 writer.write(list);
 
             }
@@ -97,7 +97,7 @@ public class keyforphase1
     BufferedWriter writer = null;
             try
             {
-                writer = new BufferedWriter( new FileWriter("key2.txt"));
+                writer = new BufferedWriter( new FileWriter("Client/key2.txt"));
                 writer.write(str);
 
             }

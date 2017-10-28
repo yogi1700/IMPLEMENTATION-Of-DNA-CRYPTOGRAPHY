@@ -161,9 +161,9 @@ public class NewJFrame extends javax.swing.JFrame
             }
              //reading from file
 
-           byte[] array = Files.readAllBytes(Paths.get("binary.txt"));
+           byte[] array = Files.readAllBytes(Paths.get("Client/binary.txt"));
            //saving to file
-           FileOutputStream fos = new FileOutputStream("binary.txt");
+           FileOutputStream fos = new FileOutputStream("Client/binary.txt");
            fos.write(array );
            fos.close();
             String s=binary.toString();
@@ -180,7 +180,7 @@ public class NewJFrame extends javax.swing.JFrame
             long estimatedTime = System.currentTimeMillis() - startTime;
             try
             {
-                writer = new BufferedWriter( new FileWriter("filename.txt"));
+                writer = new BufferedWriter( new FileWriter("Client/filename.txt"));
                 writer.write(ss2);
 
             }
@@ -234,7 +234,7 @@ public class NewJFrame extends javax.swing.JFrame
             String str1=(String)din.readUTF(); 
             
             //taking key1 from file and storing in joint string
-            FileReader freader = new FileReader("key.txt");  
+            FileReader freader = new FileReader("Client/key.txt");  
             BufferedReader br1= new BufferedReader(freader);  
             String s;  
             while((s = br1.readLine()) != null) 
@@ -246,7 +246,7 @@ public class NewJFrame extends javax.swing.JFrame
             sa.SenderRSA1();// calling for generating public and private ke for sender
             
             //taking key2 form file and storing in joint1 string
-            FileReader freader1= new FileReader("key2.txt");  
+            FileReader freader1= new FileReader("Client/key2.txt");  
             BufferedReader br2= new BufferedReader(freader1);  
             String s1;  
             while((s1= br2.readLine()) != null) 

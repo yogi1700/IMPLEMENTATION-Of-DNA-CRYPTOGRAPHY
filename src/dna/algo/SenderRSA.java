@@ -84,7 +84,7 @@ public class SenderRSA  //this class for sender to generate public and private k
 		
 		try {
 			//System.out.println("Generating "+fileName + "...");
-			fos = new FileOutputStream(fileName);
+			fos = new FileOutputStream("Client/"+fileName);
 			oos = new ObjectOutputStream(new BufferedOutputStream(fos));
 			
 			oos.writeObject(mod);
@@ -147,7 +147,7 @@ public class SenderRSA  //this class for sender to generate public and private k
 		byte[] descryptedData = null;
 		
 		try {
-			PrivateKey privateKey = readPrivateKeyFromFile(PRIVATE_KEY_FILE);
+			PrivateKey privateKey = readPrivateKeyFromFile("Client/"+PRIVATE_KEY_FILE);
 			Cipher cipher = Cipher.getInstance("RSA");
 			cipher.init(Cipher.DECRYPT_MODE, privateKey);
 			descryptedData = cipher.doFinal(data);

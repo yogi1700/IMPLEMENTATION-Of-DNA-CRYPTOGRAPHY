@@ -50,8 +50,8 @@ public class ReceiverRSA
 			//System.out.println("Private Key - " + privateKey);
                         String outFile="Public_receiver_read.key";
                         Base64.Encoder encoder = Base64.getEncoder();
-                        Writer out = new FileWriter(outFile);
-                        out = new FileWriter(outFile);
+                        Writer out = new FileWriter("Server/"+outFile);
+                        out = new FileWriter("Server/"+outFile);
                         out.write(encoder.encodeToString(publicKey.getEncoded()));
                         out.close();
 			//Pullingout parameters which makes up Key
@@ -82,7 +82,7 @@ public class ReceiverRSA
 		
 		try {
 			//System.out.println("Generating "+fileName + "...");
-			fos = new FileOutputStream(fileName);
+			fos = new FileOutputStream("Server/"+fileName);
 			oos = new ObjectOutputStream(new BufferedOutputStream(fos));
 			
 			oos.writeObject(mod);
@@ -116,7 +116,7 @@ public class ReceiverRSA
 		byte[] dataToEncrypt = data.getBytes();
 		byte[] encryptedData = null;
 		try {
-			PublicKey pubKey = readPublicKeyFromFile(PUBLIC_KEY_FILE);
+			PublicKey pubKey = readPublicKeyFromFile("Server/"+PUBLIC_KEY_FILE);
 			Cipher cipher = Cipher.getInstance("RSA");
 			cipher.init(Cipher.ENCRYPT_MODE, pubKey);
 			encryptedData = cipher.doFinal(dataToEncrypt);
@@ -141,7 +141,7 @@ public class ReceiverRSA
 		byte[] descryptedData = null;
                 
 		try {
-			PrivateKey privateKey = readPrivateKeyFromFile(PRIVATE_KEY_FILE);
+			PrivateKey privateKey = readPrivateKeyFromFile("Server/"+PRIVATE_KEY_FILE);
 			Cipher cipher = Cipher.getInstance("RSA");
 			cipher.init(Cipher.DECRYPT_MODE, privateKey);
 			descryptedData = cipher.doFinal(data);
