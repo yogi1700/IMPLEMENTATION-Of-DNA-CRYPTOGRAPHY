@@ -5,8 +5,6 @@
  */
 package dna.algo;
 
-import sun.security.util.Length;
-
 /**
  *
  * @author yogi
