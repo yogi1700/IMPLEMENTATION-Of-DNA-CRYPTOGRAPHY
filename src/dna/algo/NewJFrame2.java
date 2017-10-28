@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package dna.algo;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -20,20 +21,19 @@ import java.util.Base64;
  *
  * @author yogi
  */
-public class NewJFrame2 extends javax.swing.JFrame 
-{
-      
+public class NewJFrame2 extends javax.swing.JFrame {
+
     static String output = "";
-    static String str1="";
-    static String joint1="";
-    
+    static String str1 = "";
+    static String joint1 = "";
+
     /**
      * Creates new form NewJFrame2
      */
-    public NewJFrame2() 
-    {
+    public NewJFrame2() {
         initComponents();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -133,139 +133,114 @@ public class NewJFrame2 extends javax.swing.JFrame
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) throws IOException 
-    {
-        
-        
-        try
-        {
+    public static void main(String args[]) throws IOException {
+
+        try {
             //System.out.println("In server side");
-            
-            ReceiverRSA rsa2=new ReceiverRSA();
-            
+
+            ReceiverRSA rsa2 = new ReceiverRSA();
+
             // connect with client with same port number and accept request of client
-            ServerSocket ss1=new ServerSocket(1201);
-            Socket s=ss1.accept();
-            DataInputStream din=new DataInputStream(s.getInputStream());
-            DataOutputStream dout=new DataOutputStream(s.getOutputStream());
-            BufferedReader br=new BufferedReader(new InputStreamReader(System.in)); 
-            
+            ServerSocket ss1 = new ServerSocket(1201);
+            Socket s = ss1.accept();
+            DataInputStream din = new DataInputStream(s.getInputStream());
+            DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
             //encrypted message from client
-            str1=(String)din.readUTF(); 
+            str1 = (String) din.readUTF();
             //System.out.println("message="+str1);
-            
+
             //generating public and private key for server
             rsa2.ReceiverRSA1();
-            
+
             //reading public key and assigning in joint1 string
-            FileReader freader1= new FileReader("Public_receiver_read.key");  
-            BufferedReader br2= new BufferedReader(freader1);  
-            String kl;  
-            while((kl= br2.readLine()) != null) 
-            {  
-            //System.out.println(kl);  
-            joint1=joint1+kl;
+            FileReader freader1 = new FileReader("Public_receiver_read.key");
+            BufferedReader br2 = new BufferedReader(freader1);
+            String kl;
+            while ((kl = br2.readLine()) != null) {
+                //System.out.println(kl);  
+                joint1 = joint1 + kl;
             }
             //System.out.println("joint="+joint1);
-            
+
             //sending public key to client
             dout.writeUTF(joint1);
-            
+
             // recieved key1 from client in encrypted form
-            String key3=(String)din.readUTF();  
+            String key3 = (String) din.readUTF();
             //System.out.println("key3="+key3);
-            
+
             //decrypting key1 with server private key
-            Base64.Decoder decoder=Base64.getDecoder();
-            byte[] encrypted =decoder.decode(key3);
+            Base64.Decoder decoder = Base64.getDecoder();
+            byte[] encrypted = decoder.decode(key3);
             //System.out.println(" in New Frame 2"+encrypted);
-            
-            byte[] decryptedkey1=rsa2.decryptData(encrypted);
+
+            byte[] decryptedkey1 = rsa2.decryptData(encrypted);
             //System.out.println(" server side="+new String(decryptedkey1));
-            String kkk=new String(decryptedkey1);
-            
+            String kkk = new String(decryptedkey1);
+
             //storing key1
-             BufferedWriter writer = null;
-            try
-            {
-                writer = new BufferedWriter( new FileWriter("Server/key1.txt"));
+            BufferedWriter writer = null;
+            try {
+                writer = new BufferedWriter(new FileWriter("Server/key1.txt"));
                 writer.write(kkk);
 
+            } catch (IOException e) {
+            } finally {
+                try {
+                    if (writer != null) {
+                        writer.close();
+                    }
+                } catch (IOException e) {
+                }
             }
-            catch ( IOException e)
-            {
-            }
-            finally
-            {
-            try
-             {
-              if (writer != null)
-                writer.close( );
-              }
-             catch (IOException e)
-              {
-               }
-             }
-        
-            
-            
-            
-            String key4=(String)din.readUTF();//key2 received from client
-            
+
+            String key4 = (String) din.readUTF();//key2 received from client
+
             //decrypting key2 
-            byte[] encrypted1=decoder.decode(key4);
+            byte[] encrypted1 = decoder.decode(key4);
             //System.out.println(" in New Frame 2"+encrypted1);
-            byte[] decryptedkey2=rsa2.decryptData(encrypted1);
+            byte[] decryptedkey2 = rsa2.decryptData(encrypted1);
             //System.out.println(" decrypted key2==="+new String(decryptedkey2));
-            String kkk1=new String(decryptedkey2);
-            
+            String kkk1 = new String(decryptedkey2);
+
             //storing key2
-            BufferedWriter writer1=null;
-            try
-            {
-                writer1= new BufferedWriter( new FileWriter("Server/key2.txt"));
+            BufferedWriter writer1 = null;
+            try {
+                writer1 = new BufferedWriter(new FileWriter("Server/key2.txt"));
                 writer1.write(kkk1);
 
+            } catch (IOException e) {
+            } finally {
+                try {
+                    if (writer1 != null) {
+                        writer1.close();
+                    }
+                } catch (IOException e) {
+                }
             }
-            catch (IOException e)
-            {
-            }
-            finally
-            {
-            try
-             {
-              if (writer1 != null)
-                writer1.close( );
-              }
-             catch (IOException e)
-              {
-               }
-             }
-            
-            
-                    
+
             //decrypting message of client        
-            DecryptionPhase1withThreads dp1=new DecryptionPhase1withThreads();
-            String s1=dp1.calculate(str1);
-            DecryptionPhase2 dp2=new DecryptionPhase2();
-            String ss2=dp2.calculate(s1);
+            DecryptionPhase1withThreads dp1 = new DecryptionPhase1withThreads();
+            String s1 = dp1.calculate(str1);
+            DecryptionPhase2 dp2 = new DecryptionPhase2();
+            String ss2 = dp2.calculate(s1);
             //System.out.println("\nfinal phase2="+ss2);
-            
+
             //BinarytoHexaDecimal bhd=new BinarytoHexaDecimal();
             //String ss3=bhd.calcualte(ss2);
-            
             //used for converting binary to text
-            for(int i = 0; i <= ss2.length() - 8; i+=8)
-            {
-                int k = Integer.parseInt(ss2.substring(i, i+8), 2);
+            for (int i = 0; i <= ss2.length() - 8; i += 8) {
+                int k = Integer.parseInt(ss2.substring(i, i + 8), 2);
                 output += (char) k;
-            }   
+            }
             /*String [] decryPhase1=kp.calculate();
             for(int k=0;k<decryPhase1.length;k++)
             {
                 System.out.print(decryPhase1[k]);
-            } */  
-            /*String  str2=(String)din.readUTF(); 
+            } */
+ /*String  str2=(String)din.readUTF(); 
             System.out.println("p="+str1);
             System.out.println("g="+str2); 
             p=new BigInteger(str1);
@@ -283,38 +258,39 @@ public class NewJFrame2 extends javax.swing.JFrame
             System.out.println(" Server side K="+key1);
             String value=(String)din.readUTF();
             jTextArea1.setText(value);*/
-            
-            
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NewJFrame2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new NewJFrame2().setVisible(true);
+
+ /* Set the Nimbus look and feel */
+            //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+            /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+             */
+            try {
+                for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                    if ("Nimbus".equals(info.getName())) {
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
+                    }
+                }
+            } catch (ClassNotFoundException ex) {
+                java.util.logging.Logger.getLogger(NewJFrame2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+                java.util.logging.Logger.getLogger(NewJFrame2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                java.util.logging.Logger.getLogger(NewJFrame2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+                java.util.logging.Logger.getLogger(NewJFrame2.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
             }
-        });
-    } catch(Exception e){}
+            //</editor-fold>
+
+            /* Create and display the form */
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    new NewJFrame2().setVisible(true);
+                }
+            });
+        } catch (Exception e) {
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

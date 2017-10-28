@@ -5,6 +5,8 @@
  */
 package dna.algo;
 
+import java.util.Arrays;
+
 /**
  *
  * @author yogi
@@ -41,14 +43,16 @@ public class DecryptionPhase2
             
         }
         }
-       Thread.sleep(10000);
+       Thread.sleep(10);
        //System.out.println("\nDecryptMessage2 and length"+DecryptMessage2.length);
        
-       for(int l=0;l<DecryptMessage2.length;l++)
+       phase2 = Arrays.toString(DecryptMessage2).replaceAll(", |\\[|\\]", "");
+       
+       /*for(int l=0;l<DecryptMessage2.length;l++)
         {
             //System.out.println(DecryptMessage2[l]);
             phase2=phase2+DecryptMessage2[l];
-        }
+        }*/
     
     return phase2;
     }

@@ -110,7 +110,7 @@ public class EncryptionPhase2withThread  //this class for encryption phase 2
         
     }
         
-        Thread.sleep(100);
+        Thread.sleep(10);
         //System.out.println(a.length()+" length of a "+global.length+" global length");
         //System.out.println(" a="+a);
         //System.out.println(" global second time ");

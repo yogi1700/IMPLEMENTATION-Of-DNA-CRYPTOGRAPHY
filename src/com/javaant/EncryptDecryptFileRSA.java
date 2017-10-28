@@ -32,26 +32,59 @@ class MyRSACipher
 }
 public class EncryptDecryptFileRSA {
   public static void main(String[] args) throws Exception {
+        
     // TODO Auto-generated method stub
-    String fileToEncrypt = "/home/yogi/Desktop/HPC_Project/encryption/1.txt";
+    long startTime1= System.currentTimeMillis();
+    
+    String fileToEncrypt = "/home/yogi/Desktop/HPC_Project/encryption/aes.txt";
     String encryptedFile = "/home/yogi/Desktop/HPC_Project/encryption/file-after-encryption";
     String decryptedFile = "/home/yogi/Desktop/HPC_Project/encryption/file-after-decryption";
+    
+    
+    
     // Generate a key-pair
     KeyPair keyPari = MyRSACipher.getRSAKeyPair();
     PublicKey publicKey = keyPari.getPublic();
     PrivateKey privatekey = keyPari.getPrivate();
+    
+    
+    long startTime2= System.currentTimeMillis();
+    
     File file = new File(fileToEncrypt);
     byte[] dataBytes = FileUtils.readFileToByteArray(file);
     // Encrypt the file
     String algo = "RSA/ECB/PKCS1Padding";
     byte[] encryptedBytes = MyRSACipher.encryptFile(dataBytes, publicKey, algo);
+    
+    
+    
     file = new File(encryptedFile);
     FileUtils.writeByteArrayToFile(file, encryptedBytes);
+    
+    
+    long estimatedTime1= System.currentTimeMillis() - startTime2;
+    
+    System.out.println("\ntime taken by encryption="+estimatedTime1);
+    
+    
     System.out.println("Encrypted file : " + encryptedFile);
     // Decrypt the file
+    
+    long startTime3= System.currentTimeMillis();
+    
     byte[] decryptedBytes = MyRSACipher.decryptFile(encryptedBytes, privatekey, algo);
     file = new File(decryptedFile);
     FileUtils.writeByteArrayToFile(file, decryptedBytes);
     System.out.println("Decrypted file : " + decryptedFile);
+    
+    long estimatedTime = System.currentTimeMillis() - startTime3;
+    System.out.println("\ntime taken by total="+estimatedTime);
+    
+    long estimatedTime0= System.currentTimeMillis() - startTime1;
+    System.out.println("\ntime taken by total="+estimatedTime0);
+    
+    
+    
+    
   }
 }

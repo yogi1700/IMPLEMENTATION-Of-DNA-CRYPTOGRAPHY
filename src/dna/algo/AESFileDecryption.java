@@ -14,6 +14,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class AESFileDecryption {
 	public static void main(String[] args) throws Exception {
 
+             long startTime = System.currentTimeMillis();
 		String password = "javapapers";
 
 		// reading the salt
@@ -41,7 +42,7 @@ public class AESFileDecryption {
 		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 		cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
 		FileInputStream fis = new FileInputStream("encryptedfile.des");
-		FileOutputStream fos = new FileOutputStream("plainfile_decrypted.txt");
+		FileOutputStream fos = new FileOutputStream("VID_20170910_213813.mp4");
 		byte[] in = new byte[64];
 		int read;
 		while ((read = fis.read(in)) != -1) {
@@ -57,5 +58,8 @@ public class AESFileDecryption {
 		fos.flush();
 		fos.close();
 		System.out.println("File Decrypted.");
+                
+            long estimatedTime = System.currentTimeMillis() - startTime;
+            System.out.println("\ntime taken by decryption ="+estimatedTime);
 	}
 }

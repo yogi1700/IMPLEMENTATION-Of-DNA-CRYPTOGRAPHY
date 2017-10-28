@@ -19,7 +19,8 @@ public class AESFileEncryption
         {
 
 		// file to be encrypted
-		FileInputStream inFile = new FileInputStream("filename.txt");
+             long startTime = System.currentTimeMillis();
+		FileInputStream inFile = new FileInputStream("/home/yogi/Desktop/HPC_Project/encryption/VID_20170910_213813.mp4");
 
 		// encrypted file
 		FileOutputStream outFile = new FileOutputStream("encryptedfile.des");
@@ -81,6 +82,9 @@ public class AESFileEncryption
 		outFile.close();
 
 		System.out.println("File Encrypted.");
+                
+            long estimatedTime = System.currentTimeMillis() - startTime;
+            System.out.println("\ntime taken by decryption ="+estimatedTime);
 		
 	}
 

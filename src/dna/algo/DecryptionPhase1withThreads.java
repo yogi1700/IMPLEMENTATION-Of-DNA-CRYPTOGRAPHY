@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  *
@@ -106,16 +107,19 @@ public class DecryptionPhase1withThreads
         }
         
     }
-        Thread.sleep(1000);
+        Thread.sleep(10);
         
         //printing the message after phase1 decryption and assigning to phase1 string
         
         //System.out.println("DecryptMessage");
-        for(int k=0;k<DecryptMessage.length;k++)
+         phase1 =Arrays.toString(DecryptMessage).replaceAll(", |\\[|\\]", "");
+      
+        
+        /*for(int k=0;k<DecryptMessage.length;k++)
         {
             //System.out.print(DecryptMessage[k]);
             phase1=phase1+DecryptMessage[k];
-        }
+        }*/
         
         
      

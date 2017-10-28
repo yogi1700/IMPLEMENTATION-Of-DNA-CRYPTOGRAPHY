@@ -183,16 +183,35 @@ public class DecryJFrame1 extends javax.swing.JFrame {
             String str=jTextArea1.getText();
             //System.out.println("yes"+str);
             
-            
+           
             long startTime = System.currentTimeMillis();
+           
+           
             
-            DecryptionPhase1withThreads dp=new DecryptionPhase1withThreads();
+            //long startTime1 = System.currentTimeMillis();
+            
+            
+            DecryptionPhase1withThreads dp=new DecryptionPhase1withThreads();           
             String s1=dp.calculate(str);
-            DecryptionPhase2 dp2=new DecryptionPhase2();
-            String ss2=dp2.calculate(s1);
+            
+            //long estimatedTime = System.currentTimeMillis() - startTime1;
+            //System.out.println("\ntime taken by decryption phase1 ="+estimatedTime);
+             
+            //long startTime2= System.currentTimeMillis();
+            
+            DecryptionPhase2 dp2=new DecryptionPhase2();     
+            String ss2=dp2.calculate(s1);           
+            
+            
+            long estimatedTime1= System.currentTimeMillis() - startTime;
+            System.out.println("\ntime taken by decryption phase ="+estimatedTime1);
             //System.out.println("\nfinal phase2="+ss2);
             //BinarytoHexaDecimal bhd=new BinarytoHexaDecimal();
             //String ss3=bhd.calcualte(ss2);
+            
+            
+            //long startTime3= System.currentTimeMillis();
+            
             String output = "";
             for(int i = 0; i <= ss2.length() - 8; i+=8)
             {
@@ -200,10 +219,20 @@ public class DecryJFrame1 extends javax.swing.JFrame {
                 output += (char) k;
             }   
             
-            long estimatedTime = System.currentTimeMillis() - startTime;
-            System.out.println("\ntime taken by decryption ="+estimatedTime);
+            //long estimatedTime2= System.currentTimeMillis() - startTime3;
+            //System.out.println("\ntime taken by bunary to text conversion ="+estimatedTime2);
+            
+            //long startTime4= System.currentTimeMillis();
+            
             
             jTextArea2.setText(output);
+            
+             //long estimatedTime3= System.currentTimeMillis() - startTime4;
+            //System.out.println("\ntime taken by finally to textarea="+estimatedTime3);
+            
+            //long estimatedTime5= System.currentTimeMillis() - startTime;
+            //System.out.println("\ntime taken by finally to textarea="+estimatedTime5);
+            
             
         } 
         catch (InterruptedException ex) {

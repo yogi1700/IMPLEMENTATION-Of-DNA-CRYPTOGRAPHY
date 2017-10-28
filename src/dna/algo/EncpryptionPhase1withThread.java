@@ -89,7 +89,7 @@ public class EncpryptionPhase1withThread
         //System.out.println("yes");
         //for(int i=0;i<global.length;i++)
         //{
-        Thread.sleep(100);
+        Thread.sleep(10);
         EncpryptionPhase1withThread nw=new EncpryptionPhase1withThread();
         //System.out.println(a+" and length of bdr \n"+bdr.length+" value="+a.length());
         if(a.length()%2!=0)
